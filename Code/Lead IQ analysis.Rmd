@@ -1,0 +1,73 @@
+---
+title: "Lead IQ Analysis"
+author: "Jinal Shah"
+date: '2022-10-07'
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+# load the library 
+library(ggplot2)
+library(dplyr)
+library(kableExtra )
+
+# import the data
+lead_iq = read.csv("../DataRaw/lead-iq-01.csv")
+```
+
+# Lead IQ data set description
+
+Lead is highly poisonous if ingested directly, and affects almost every organ in the body. In low, indirect doses, the primary biological effect of lead exposure is damage to the nervous system. The maximum safe level of lead exposure, however, is somewhat controversial.
+
+To investigate the relationship between low-level lead absorption and neurological function, a team of researchers led by the CDC investigated children between the ages of 3 and 15 in El Paso that lived various distances from a large, lead-emitting ore smelter. This data set contains a small portion of the data collected by the researchers. In particular, it should be noted that the primary comparison conducted by the researchers was between children with high lead levels and low lead levels, not between children who lived near and far from the smelter.
+
+
+# A graph showing the IQ levels by location status
+```{r}
+
+# grouped boxplot
+ggplot(lead_iq, aes(x=Smelter, y=IQ)) + 
+    geom_boxplot()
+
+
+```
+
+# B At least one nicely formatted table 
+
+```{r}
+lead_iq_sum <- lead_iq%>%
+  group_by(Smelter) %>%
+  summarize(mean_IQ = round(mean(IQ, na.rm = TRUE),2),
+            sd = round(sd (IQ, na.rm = T),2),
+            median = median(IQ, na.rm = T),
+            IQR = IQR(IQ, na.rm = T))
+
+kable(x = lead_iq_sum, 
+      col.names = c("Distance from Smelter", "Mean IQ", "SD of IQ", "Median IQ", "IQR of IQ"),
+      caption = "Summary statistics of IQ stratifed by Smelter") %>%
+   kable_classic(full_width = FALSE, html_font = "Cambria", font_size=16)
+```
+
+# C.Description of Graph and table
+
+As seen from the boxplot above,at first glance  mean IQ in both group of subjects who lived near the lead smear vs far from lead smear had similar mean level of IQ.Though upon closer insepction, we note that median IQ for those who lived far from smear appears to be little higher.  The group that lived far contains few outliers with one subject in far group having IQ of 999.
+
+From the summary table above, we can see the summary statistics stratified by group. Mean IQ of group of children who lived far from lead smear had mean IQ of `r round(mean(lead_iq$IQ[lead_iq$Smelter=="Far"]),2) ` compared to `r round(mean(lead_iq$IQ[lead_iq$Smelter=="Near"]),2) ` IQ for children who lived near the smear. This difference was not much visible in barplot due to extreme outliars in the far group. 
+
+# D. In-line calculations giving the values of the means, that will be updated if the data are changed.
+
+The mean IQ for group of children who lived far from smear is `r round(mean(lead_iq$IQ[lead_iq$Smelter=="Far"]),2) ` and mean IQ for group of children who lived neat the smear is `r round(mean(lead_iq$IQ[lead_iq$Smelter=="Near"]),2) `
+
+
+# E At least one R code chunk.
+
+There are two R chunks above in part A & B.
+
+
