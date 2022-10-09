@@ -1,5 +1,5 @@
 ---
-title: "Lead IQ Analysis"
+title: "Lead IQ Analysis- updated"
 author: "Jinal Shah"
 date: '2022-10-07'
 output:
@@ -17,9 +17,13 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(dplyr)
 library(kableExtra )
+library(here)
 
 # import the data
-lead_iq = read.csv("../DataRaw/lead-iq-01.csv")
+lead_iq = read.csv(here("DataRaw","lead-iq-01.csv"))
+
+# removing the outlier
+lead_iq$IQ[lead_iq$IQ==999]<-99
 ```
 
 # Lead IQ data set description
@@ -39,6 +43,12 @@ ggplot(lead_iq, aes(x=Smelter, y=IQ)) +
 
 ```
 
+
+
+
+
+
+
 # B At least one nicely formatted table 
 
 ```{r}
@@ -55,15 +65,11 @@ kable(x = lead_iq_sum,
    kable_classic(full_width = FALSE, html_font = "Cambria", font_size=16)
 ```
 
-# C.Description of Graph and table
+# C & D Description of Graph and table
 
-As seen from the boxplot above,at first glance  mean IQ in both group of subjects who lived near the lead smear vs far from lead smear had similar mean level of IQ.Though upon closer insepction, we note that median IQ for those who lived far from smear appears to be little higher.  The group that lived far contains few outliers with one subject in far group having IQ of 999.
+As seen from the boxplot above,after replacing the outliar value, the distribution of IQ in both group looks similar.The median IQ of far group is sightly higher than median IQ value for near group. There are still few outliers in group of children who live far from smear. 
 
-From the summary table above, we can see the summary statistics stratified by group. Mean IQ of group of children who lived far from lead smear had mean IQ of `r round(mean(lead_iq$IQ[lead_iq$Smelter=="Far"]),2) ` compared to `r round(mean(lead_iq$IQ[lead_iq$Smelter=="Near"]),2) ` IQ for children who lived near the smear. This difference was not much visible in barplot due to extreme outliars in the far group. 
-
-# D. In-line calculations giving the values of the means, that will be updated if the data are changed.
-
-The mean IQ for group of children who lived far from smear is `r round(mean(lead_iq$IQ[lead_iq$Smelter=="Far"]),2) ` and mean IQ for group of children who lived neat the smear is `r round(mean(lead_iq$IQ[lead_iq$Smelter=="Near"]),2) `
+From the summary table above, we can see the summary statistics stratified by group. Mean IQ of group of children who lived far from lead smear had mean IQ of `r round(mean(lead_iq$IQ[lead_iq$Smelter=="Far"]),2) ` compared to `r round(mean(lead_iq$IQ[lead_iq$Smelter=="Near"]),2) ` IQ for children who lived near the smear. 
 
 
 # E At least one R code chunk.
